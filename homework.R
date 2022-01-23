@@ -13,14 +13,14 @@
 #Speed response was what the participant report
 #Correct is whether their response matched the actual speed
 
-### QUESTION 1 ------ 
+### QUESTION 1 ---------------------------------------------------------------------------------- 
 
 # Load the readr package
 
 # ANSWER
+library(readr)
 
-
-### QUESTION 2 ----- 
+### QUESTION 2 ---------------------------------------------------------------------------------- 
 
 # Read in the data for 6191_1.txt and store it to a variable called ds1
 # Ignore the header information, and just import the 20 trials
@@ -46,9 +46,9 @@ col_names  <-  c("trial_num","speed_actual","speed_response","correct")
 
 # ANSWER
 
+ds1 <- read_tsv("data_A/6191_1.txt", col_names = col_names, skip = 7)
 
-
-### QUESTION 3 ----- 
+### QUESTION 3 ---------------------------------------------------------------------------------- 
 
 # For some reason, the trial numbers for this experiment should start at 100
 # Create a new column in ds1 that takes trial_num and adds 100
@@ -56,23 +56,27 @@ col_names  <-  c("trial_num","speed_actual","speed_response","correct")
 
 # ANSWER
 
+ds1$new_trial_num <- ds1$trial_num + 100
+write_csv(ds1, file = "data_cleaned/6191_1.csv")
 
-### QUESTION 4 ----- 
+### QUESTION 4 ---------------------------------------------------------------------------------- 
 
 # Use list.files() to get a list of the full file names of everything in "data_A"
 # Store it to a variable
 
 # ANSWER
 
+full_file_list <-  list.files('data_A', full.names = TRUE, recursive = TRUE)
 
-### QUESTION 5 ----- 
+### QUESTION 5 ---------------------------------------------------------------------------------- 
 
 # Read all of the files in data_A into a single tibble called ds
 
 # ANSWER
 
+ds <- read_tsv(full_file_list , col_names = col_names, skip = 7)
 
-### QUESTION 6 -----
+### QUESTION 6 ----------------------------------------------------------------------------------
 
 # Try creating the "add 100" to the trial number variable again
 # There's an error! Take a look at 6191_5.txt to see why.
@@ -84,8 +88,12 @@ col_names  <-  c("trial_num","speed_actual","speed_response","correct")
 
 # ANSWER
 
+ds$new_trial_num <- ds$trial_num + 100
+col_types = 'iccl'
+ds <- read_tsv(full_file_list , col_names = col_names, col_types = col_types, skip = 7)
+ds$new_trial_num <- ds$trial_num + 100
 
-### QUESTION 7 -----
+### QUESTION 7 ----------------------------------------------------------------------------------
 
 # Now that the column type problem is fixed, take a look at ds
 # We're missing some important information (which participant/block each set of trials comes from)
@@ -95,11 +103,22 @@ col_names  <-  c("trial_num","speed_actual","speed_response","correct")
 # ANSWER
 
 
-### QUESTION 8 -----
+
+ds <- read_tsv(full_file_list , col_names = col_names, 
+               col_types = col_types, id = 'filename', skip = 7) #For some reason I'm losing the column 
+                                                      #with trial num + 100 when I do this! 
+
+### QUESTION 8 ----------------------------------------------------------------------------------
 
 # Your PI emailed you an Excel file with the list of participant info 
 # Install the readxl package, load it, and use it to read in the .xlsx data in data_B
 # There are two sheets of data -- import each one into a new tibble
 
 # ANSWER
+
+install.packages('readxl')
+library(readxl)
+ds2_sheet1 <- read_excel("data_B/participant_info.xlsx", sheet = 1, col_names = TRUE)
+ds2_sheet2 <- read_excel("data_B/participant_info.xlsx", sheet = 2, col_names = TRUE)
+
 
